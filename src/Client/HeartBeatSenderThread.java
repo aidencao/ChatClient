@@ -32,7 +32,7 @@ public class HeartBeatSenderThread extends Thread {
 				sleep(15000);
 			}
 		} catch (InterruptedException e) {
-			System.out.println("服务器失效，心跳发送线程退出");
+			System.out.println("心跳发送线程退出");
 			feedback.setText("服务器失效，请退出");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
