@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,6 +17,10 @@ import java.net.UnknownHostException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Client.GetServerThread;
+import Client.HeartBeatSenderThread;
+
 import javax.swing.BoxLayout;
 import javax.swing.JTextPane;
 import javax.swing.GroupLayout;
@@ -31,14 +37,14 @@ public class LoginUI extends JFrame {
 	private JTextField username;
 	private JTextField listeningPort;
 	private JTextField feedback;
-	
-	public static boolean isNumeric (String str) {
-	    for (int i = str.length(); --i >= 0;) {
-	          if (!Character.isDigit(str.charAt(i))) {
-	                return false;
-	          }
-	    }
-	    return true;
+
+	public static boolean isNumeric(String str) {
+		for (int i = str.length(); --i >= 0;) {
+			if (!Character.isDigit(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -82,9 +88,9 @@ public class LoginUI extends JFrame {
 						// 获取用户名监听端口
 						String user = username.getText();
 						String port = listeningPort.getText();
-						
-						//输入合法才可登录
-						if(!user.equals("")&&!port.equals("")&&isNumeric(port)) {
+
+						// 输入合法才可登录
+						if (!user.equals("") && !port.equals("") && isNumeric(port)) {
 							// 发送到服务器
 							writer.println("00");// 00作为登录命令
 							writer.println(user);
@@ -94,17 +100,18 @@ public class LoginUI extends JFrame {
 							// 接收反馈
 							String response = reader.readLine();
 							// 判断
-							System.out.println(response);
 							if (response.equals("0")) {
 								System.out.println("登录成功");
-								// new ChatUI(user, s1, s2).setVisible(true);
+								//打开主界面，关闭登录界面
+								MainFrameUI mainFrame = new MainFrameUI(reader, writer, user, Integer.parseInt(port));
+								mainFrame.setVisible(true);
 								//setVisible(false);
 							} else if (response.equals("1")) {
 								feedback.setText("用户名被占用");
 							} else if (response.equals("2")) {
 								feedback.setText("端口被占用");
 							}
-						}else {
+						} else {
 							feedback.setText("输入非法");
 						}
 					} catch (IOException e) {
@@ -133,6 +140,15 @@ public class LoginUI extends JFrame {
 			contentPane.add(button);
 			contentPane.add(feedback);
 			contentPane.add(label_2);
+
+			// 关闭窗口时调用的方法
+			addWindowListener(new WindowAdapter() {
+				public void windowClosing(WindowEvent e) {
+					// 发送停止消息给服务器，让其停止相应线程
+					writer.println("01");
+					writer.flush();
+				}
+			});
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
