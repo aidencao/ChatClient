@@ -105,7 +105,7 @@ public class LoginUI extends JFrame {
 								//打开主界面，关闭登录界面
 								MainFrameUI mainFrame = new MainFrameUI(reader, writer, user, Integer.parseInt(port));
 								mainFrame.setVisible(true);
-								//setVisible(false);
+								setVisible(false);
 							} else if (response.equals("1")) {
 								feedback.setText("用户名被占用");
 							} else if (response.equals("2")) {

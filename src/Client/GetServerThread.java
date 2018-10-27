@@ -1,10 +1,17 @@
 package Client;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+
+import UI.ChatUI;
+import UI.MainFrameUI;
 
 //登录后接收服务器消息的线程
 public class GetServerThread extends Thread {
@@ -36,7 +43,7 @@ public class GetServerThread extends Thread {
 				String code = response.substring(0, 2);
 				String content = response.substring(2);
 				
-				//用户列表
+				//处理返回结果
 				if(code.equals("11")) {
 					// 获取当前所有用户
 					String[] u = content.split(",");
@@ -49,6 +56,23 @@ public class GetServerThread extends Thread {
 							userList.addItem(u[j]);
 						}
 					}
+				}else if(code.equals("22")) {
+					//申请与某用户链接失败
+					feedback.setText("当前用户已离线");
+				}else if(code.equals("21")) {
+					//申请获取用户端口号成功
+					
+					//分割结果
+					String[] s = content.split(",");
+					String chatName = s[0];
+					int port = Integer.parseInt(s[1]);
+					//与对方建立链接，并建立输入输出流
+					Socket chatSocket = new Socket("localhost", port);
+					BufferedReader chatReader = new BufferedReader(new InputStreamReader(chatSocket.getInputStream()));
+					PrintWriter chatWriter = new PrintWriter(new DataOutputStream(chatSocket.getOutputStream()));
+					//打开聊天页面
+					ChatUI chatUI = new ChatUI(chatReader, chatWriter, chatName);
+					chatUI.setVisible(true);
 				}
 				
 			}

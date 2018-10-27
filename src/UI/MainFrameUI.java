@@ -2,9 +2,12 @@ package UI;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.swing.JFrame;
@@ -57,6 +60,18 @@ public class MainFrameUI extends JFrame {
 		feedback.setColumns(10);
 
 		JButton button = new JButton("聊天");
+		//请求建立连接
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//获取对应用户用户名并发送请求
+				String username = (String)userList.getSelectedItem();
+				if(username != null) {
+					String request = "20"+username;
+					writer.println(request);
+					writer.flush();
+				}
+			}
+		});
 		button.setBounds(158, 183, 113, 27);
 		contentPane.add(button);
 
