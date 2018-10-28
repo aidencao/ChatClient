@@ -34,6 +34,7 @@ public class MainFrameUI extends JFrame {
 	 */
 	public MainFrameUI(BufferedReader reader, PrintWriter writer, String name, int port) {
 		setTitle(name + "~主界面");
+		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -54,7 +55,7 @@ public class MainFrameUI extends JFrame {
 		contentPane.add(label_1);
 
 		feedback = new JTextField();
-		feedback.setEnabled(false);
+		feedback.setEditable(false);
 		feedback.setBounds(116, 113, 226, 24);
 		contentPane.add(feedback);
 		feedback.setColumns(10);
@@ -63,12 +64,15 @@ public class MainFrameUI extends JFrame {
 		//请求建立连接
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				feedback.setText("");
 				//获取对应用户用户名并发送请求
 				String username = (String)userList.getSelectedItem();
 				if(username != null) {
 					String request = "20"+username;
 					writer.println(request);
 					writer.flush();
+				}else {
+					feedback.setText("请选择聊天对象");
 				}
 			}
 		});
@@ -76,7 +80,7 @@ public class MainFrameUI extends JFrame {
 		contentPane.add(button);
 
 		// 打开心跳发送线程、接收消息线程和端口监听线程
-		PortMonitorThread portMonitorThread = new PortMonitorThread(port, feedback);
+		PortMonitorThread portMonitorThread = new PortMonitorThread(port, feedback, name);
 		portMonitorThread.start();
 		HeartBeatSenderThread heartBeatSenderThread = new HeartBeatSenderThread(writer, feedback);
 		heartBeatSenderThread.start();

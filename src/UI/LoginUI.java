@@ -59,6 +59,7 @@ public class LoginUI extends JFrame {
 			PrintWriter writer = new PrintWriter(new DataOutputStream(socket.getOutputStream()));
 
 			setTitle("登录");
+			setAlwaysOnTop(true);
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			setBounds(100, 100, 450, 300);
 			contentPane = new JPanel();
@@ -127,7 +128,6 @@ public class LoginUI extends JFrame {
 			feedback = new JTextField();
 			feedback.setEditable(false);
 			feedback.setBounds(143, 131, 140, 24);
-			feedback.setEnabled(false);
 			feedback.setColumns(10);
 
 			JLabel label_2 = new JLabel("提示信息：");

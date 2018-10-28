@@ -39,9 +39,9 @@ public class GetServerThread extends Thread {
 		System.out.println("开始接收服务器消息");
 		try {
 			while(!Thread.interrupted()) {
-				String response = reader.readLine();
-				String code = response.substring(0, 2);
-				String content = response.substring(2);
+				String request = reader.readLine();
+				String code = request.substring(0, 2);
+				String content = request.substring(2);
 				
 				//处理返回结果
 				if(code.equals("11")) {
@@ -71,7 +71,7 @@ public class GetServerThread extends Thread {
 					BufferedReader chatReader = new BufferedReader(new InputStreamReader(chatSocket.getInputStream()));
 					PrintWriter chatWriter = new PrintWriter(new DataOutputStream(chatSocket.getOutputStream()));
 					//打开聊天页面
-					ChatUI chatUI = new ChatUI(chatReader, chatWriter, chatName);
+					ChatUI chatUI = new ChatUI(chatReader, chatWriter, chatName, name);
 					chatUI.setVisible(true);
 				}
 				
