@@ -42,8 +42,6 @@ public class GetMessageThread extends Thread {
 				String code = request.substring(0, 2);
 				String content = request.substring(2);
 				
-				System.out.println(myName+"asdasdasasdasdasdasd");
-				
 				if(code.equals("30")) {
 					//处理获取用户名请求
 					String response = "31"+myName;
