@@ -38,7 +38,7 @@ public class LoginUI extends JFrame {
 	private JTextField listeningPort;
 	private JTextField feedback;
 
-	public static boolean isNumeric(String str) {
+	private static boolean isNumeric(String str) {
 		for (int i = str.length(); --i >= 0;) {
 			if (!Character.isDigit(str.charAt(i))) {
 				return false;
